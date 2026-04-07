@@ -5,91 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XacaInformation - Portal Berita Modern</title>
     <style>
-        /* --- CSS: THEME PUTIH HITAM ELEGAN --- */
-        :root {
-            --bg: #ffffff;
-            --text: #000000;
-            --accent: #1a1a1a;
-            --border: #e0e0e0;
-        }
-
+        /* --- CSS TETAP SAMA (TIDAK DIUBAH) --- */
+        :root { --bg: #ffffff; --text: #000000; --accent: #1a1a1a; --border: #e0e0e0; }
         * { box-sizing: border-box; transition: 0.3s; }
-        body { 
-            margin: 0; font-family: 'Inter', sans-serif; 
-            background: var(--bg); color: var(--text);
-            overflow-x: hidden;
-        }
-
-        /* Login Overlay */
-        #login-screen {
-            position: fixed; inset: 0; background: var(--bg);
-            display: flex; flex-direction: column; justify-content: center;
-            align-items: center; z-index: 1000;
-        }
-        input {
-            padding: 15px; border: 2px solid var(--accent);
-            border-radius: 8px; width: 80%; max-width: 300px;
-            outline: none; font-size: 1rem;
-        }
-
-        /* Navbar & Footer */
-        header {
-            padding: 15px; border-bottom: 2px solid var(--accent);
-            text-align: center; font-weight: 900; font-size: 1.5rem;
-            position: sticky; top: 0; background: var(--bg); z-index: 100;
-        }
-
-        nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--accent); display: flex;
-            justify-content: space-around; padding: 15px 0;
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
-        }
-        nav button {
-            background: none; border: none; color: white;
-            font-weight: bold; cursor: pointer; font-size: 0.8rem;
-        }
-
-        /* Content Area */
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        #login-screen { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; }
+        input { padding: 15px; border: 2px solid var(--accent); border-radius: 8px; width: 80%; max-width: 300px; outline: none; font-size: 1rem; margin-bottom: 10px; }
+        header { padding: 15px; border-bottom: 2px solid var(--accent); text-align: center; font-weight: 900; font-size: 1.5rem; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+        nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--accent); display: flex; justify-content: space-around; padding: 15px 0; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+        nav button { background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
         .page { display: none; padding: 20px; padding-bottom: 100px; }
         .active { display: block; animation: fadeIn 0.5s; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Berita Style */
-        .news-card {
-            border: 1px solid var(--border); padding: 20px;
-            border-radius: 12px; margin-bottom: 20px; position: relative;
-            box-shadow: 5px 5px 0px var(--accent);
-        }
-        .badge {
-            display: inline-block; padding: 5px 12px; border-radius: 20px;
-            font-size: 0.7rem; font-weight: bold; border: 1px solid var(--accent);
-            margin-bottom: 10px;
-        }
+        .news-card { border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 20px; position: relative; box-shadow: 5px 5px 0px var(--accent); }
+        .badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--accent); margin-bottom: 10px; }
         .real { background: #d4ffda; color: #155724; }
         .fake { background: #f8d7da; color: #721c24; }
-
-        /* Global Chat */
-        #chat-box {
-            height: 60vh; overflow-y: auto; border: 1px solid var(--border);
-            padding: 10px; display: flex; flex-direction: column; gap: 10px;
-        }
+        #chat-box { height: 60vh; overflow-y: auto; border: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; gap: 10px; }
         .msg { padding: 10px; border-radius: 10px; background: #f0f0f0; width: fit-content; }
-        .msg b { filter: blur(4px); } /* SENSOR NAMA */
-
-        /* Dev Portfolio */
-        .dev-card {
-            text-align: center; border: 2px solid var(--accent);
-            padding: 40px 20px; border-radius: 20px;
-        }
-        .dev-img {
-            width: 120px; height: 120px; background: #ccc;
-            border-radius: 50%; margin: 0 auto 20px; border: 4px solid var(--accent);
-        }
-
-        /* Admin Controls */
-        .admin-zone { border: 2px dashed red; padding: 15px; margin-top: 20px; border-radius: 10px; }
+        .msg b { filter: blur(4px); }
+        .dev-card { text-align: center; border: 2px solid var(--accent); padding: 40px 20px; border-radius: 20px; }
+        .dev-img { width: 120px; height: 120px; background: #ccc; border-radius: 50%; margin: 0 auto 20px; border: 4px solid var(--accent); }
+        
+        /* --- PERUBAHAN & TAMBAHAN --- */
+        .btn-login { background: var(--accent); color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 80%; max-width: 300px; }
+        .admin-zone { border: 2px dashed red; padding: 15px; margin-top: 20px; border-radius: 10px; display: none; } /* Default Hidden */
+        #error-msg { color: red; font-size: 0.8rem; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -97,17 +38,18 @@
     <div id="login-screen">
         <h1>XacaInformation</h1>
         <p>Silahkan Masukkan Nama Anda</p>
-        <input type="text" id="user-name" placeholder="Nama..." onkeypress="handleLogin(event)">
+        <p id="error-msg">Nama sudah digunakan orang lain!</p>
+        <input type="text" id="user-name" placeholder="Ketik Nama Anda...">
+        <button class="btn-login" onclick="validateLogin()">MASUK (ENTER)</button>
     </div>
 
     <header>XACA INFORMATION</header>
 
     <div id="page-news" class="page active">
-        <div id="news-list">
-            </div>
+        <div id="news-list"></div>
 
-        <div class="admin-zone">
-            <h4>Admin Command</h4>
+        <div id="admin-panel" class="admin-zone">
+            <h4>Admin Command (Private Mode)</h4>
             <input type="text" id="adm-h1" placeholder="Judul Inti (H1)..."><br><br>
             <input type="text" id="adm-p" placeholder="Sub-teks..."><br><br>
             <select id="adm-status">
@@ -115,7 +57,7 @@
                 <option value="FAKE">FAKE</option>
                 <option value="RESMI">RESMI</option>
             </select>
-            <button onclick="adminAddNews()">POSTING LIVE</button>
+            <button onclick="adminAddNews()" style="background:red; color:white; border:none; padding:10px; cursor:pointer;">POSTING LIVE</button>
         </div>
     </div>
 
@@ -149,14 +91,36 @@
 
     <script>
         let currentUser = "";
+        const ADMIN_USERNAME = "KallzX_Owner"; // USERNAME KHUSUS OWNER
 
-        // LOGIN LOGIC
-        function handleLogin(e) {
-            if (e.key === "Enter") {
-                currentUser = document.getElementById('user-name').value;
-                if(currentUser) {
-                    document.getElementById('login-screen').style.display = 'none';
-                }
+        // VALIDASI LOGIN & UNIQUE USERNAME
+        function validateLogin() {
+            const input = document.getElementById('user-name').value.trim();
+            const error = document.getElementById('error-msg');
+            
+            if(!input) return alert("Nama jangan kosong, Bre!");
+
+            // Ambil daftar user yang sudah terdaftar (simulasi database)
+            let registeredUsers = JSON.parse(localStorage.getItem('xaca_users')) || [];
+
+            // Cek apakah username sudah ada
+            if (registeredUsers.includes(input) && input !== ADMIN_USERNAME) {
+                error.style.display = 'block';
+                return;
+            }
+
+            // Jika lolos, simpan ke database (kecuali admin ga perlu daftar ulang)
+            if (input !== ADMIN_USERNAME) {
+                registeredUsers.push(input);
+                localStorage.setItem('xaca_users', JSON.stringify(registeredUsers));
+            }
+
+            currentUser = input;
+            document.getElementById('login-screen').style.display = 'none';
+
+            // CEK APAKAH DIA ADMIN?
+            if (currentUser === ADMIN_USERNAME) {
+                document.getElementById('admin-panel').style.display = 'block';
             }
         }
 
@@ -176,12 +140,15 @@
             container.innerHTML = "";
             dbNews.forEach((n, index) => {
                 const badgeClass = n.status === 'FAKE' ? 'fake' : 'real';
+                // Tombol hapus hanya tampil kalau login sebagai Owner
+                const deleteBtn = (currentUser === ADMIN_USERNAME) ? `<small onclick="hapusBerita(${index})" style="color:red; cursor:pointer;">[Hapus Berita]</small>` : "";
+                
                 container.innerHTML += `
                     <div class="news-card">
                         <span class="badge ${badgeClass}">${n.status}</span>
                         <h1>${n.h1}</h1>
                         <p>${n.p}</p>
-                        <small onclick="hapusBerita(${index})" style="color:red; cursor:pointer;">[Hapus Berita]</small>
+                        ${deleteBtn}
                     </div>
                 `;
             });
@@ -205,7 +172,7 @@
             renderNews();
         }
 
-        // CHAT LOGIC (Simulasi Real-time via LocalStorage)
+        // CHAT LOGIC
         function sendChat() {
             const input = document.getElementById('chat-input');
             let chats = JSON.parse(localStorage.getItem('xaca_chats')) || [];
@@ -224,9 +191,9 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        // Initial Run
+        // Jalankan
         renderNews();
-        setInterval(renderChat, 1000); // Cek chat baru tiap detik
+        setInterval(renderChat, 1000);
 
     </script>
 </body>
