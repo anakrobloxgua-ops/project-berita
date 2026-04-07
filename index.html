@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XacaInformation - Portal Berita Modern</title>
+    <style>
+        /* --- CSS: THEME PUTIH HITAM ELEGAN --- */
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --accent: #1a1a1a;
+            --border: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s; }
+        body { 
+            margin: 0; font-family: 'Inter', sans-serif; 
+            background: var(--bg); color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Login Overlay */
+        #login-screen {
+            position: fixed; inset: 0; background: var(--bg);
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 1000;
+        }
+        input {
+            padding: 15px; border: 2px solid var(--accent);
+            border-radius: 8px; width: 80%; max-width: 300px;
+            outline: none; font-size: 1rem;
+        }
+
+        /* Navbar & Footer */
+        header {
+            padding: 15px; border-bottom: 2px solid var(--accent);
+            text-align: center; font-weight: 900; font-size: 1.5rem;
+            position: sticky; top: 0; background: var(--bg); z-index: 100;
+        }
+
+        nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--accent); display: flex;
+            justify-content: space-around; padding: 15px 0;
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+        }
+        nav button {
+            background: none; border: none; color: white;
+            font-weight: bold; cursor: pointer; font-size: 0.8rem;
+        }
+
+        /* Content Area */
+        .page { display: none; padding: 20px; padding-bottom: 100px; }
+        .active { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Berita Style */
+        .news-card {
+            border: 1px solid var(--border); padding: 20px;
+            border-radius: 12px; margin-bottom: 20px; position: relative;
+            box-shadow: 5px 5px 0px var(--accent);
+        }
+        .badge {
+            display: inline-block; padding: 5px 12px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: bold; border: 1px solid var(--accent);
+            margin-bottom: 10px;
+        }
+        .real { background: #d4ffda; color: #155724; }
+        .fake { background: #f8d7da; color: #721c24; }
+
+        /* Global Chat */
+        #chat-box {
+            height: 60vh; overflow-y: auto; border: 1px solid var(--border);
+            padding: 10px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .msg { padding: 10px; border-radius: 10px; background: #f0f0f0; width: fit-content; }
+        .msg b { filter: blur(4px); } /* SENSOR NAMA */
+
+        /* Dev Portfolio */
+        .dev-card {
+            text-align: center; border: 2px solid var(--accent);
+            padding: 40px 20px; border-radius: 20px;
+        }
+        .dev-img {
+            width: 120px; height: 120px; background: #ccc;
+            border-radius: 50%; margin: 0 auto 20px; border: 4px solid var(--accent);
+        }
+
+        /* Admin Controls */
+        .admin-zone { border: 2px dashed red; padding: 15px; margin-top: 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <h1>XacaInformation</h1>
+        <p>Silahkan Masukkan Nama Anda</p>
+        <input type="text" id="user-name" placeholder="Nama..." onkeypress="handleLogin(event)">
+    </div>
+
+    <header>XACA INFORMATION</header>
+
+    <div id="page-news" class="page active">
+        <div id="news-list">
+            </div>
+
+        <div class="admin-zone">
+            <h4>Admin Command</h4>
+            <input type="text" id="adm-h1" placeholder="Judul Inti (H1)..."><br><br>
+            <input type="text" id="adm-p" placeholder="Sub-teks..."><br><br>
+            <select id="adm-status">
+                <option value="REAL">REAL</option>
+                <option value="FAKE">FAKE</option>
+                <option value="RESMI">RESMI</option>
+            </select>
+            <button onclick="adminAddNews()">POSTING LIVE</button>
+        </div>
+    </div>
+
+    <div id="page-chat" class="page">
+        <h2>Global Chatting</h2>
+        <div id="chat-box"></div>
+        <div style="display:flex; margin-top:10px;">
+            <input type="text" id="chat-input" placeholder="Ketik pesan..." style="flex:1;">
+            <button onclick="sendChat()" style="background:var(--accent); color:white; border:none; padding:10px;">KIRIM</button>
+        </div>
+    </div>
+
+    <div id="page-dev" class="page">
+        <div class="dev-card">
+            <div class="dev-img"></div>
+            <h1>Kallz'X</h1>
+            <p><b>Asal:</b> Indonesia</p>
+            <hr>
+            <p>"Gak perlu banyak bacot, yang penting info akurat. Web ini dedikasi buat kemajuan informasi."</p>
+            <div style="font-size: 0.8rem; margin-top: 20px;">
+                Supporter: Gemini | RealLife: Ibunda.
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <button onclick="showPage('page-news')">BERITA</button>
+        <button onclick="showPage('page-chat')">GLOBAL CHAT</button>
+        <button onclick="showPage('page-dev')">DEVELOPER</button>
+    </nav>
+
+    <script>
+        let currentUser = "";
+
+        // LOGIN LOGIC
+        function handleLogin(e) {
+            if (e.key === "Enter") {
+                currentUser = document.getElementById('user-name').value;
+                if(currentUser) {
+                    document.getElementById('login-screen').style.display = 'none';
+                }
+            }
+        }
+
+        // SPA NAVIGATION
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // NEWS LOGIC
+        let dbNews = JSON.parse(localStorage.getItem('xaca_news')) || [
+            { h1: "Selamat Datang di Xaca", p: "Portal berita paling to the point.", status: "RESMI" }
+        ];
+
+        function renderNews() {
+            const container = document.getElementById('news-list');
+            container.innerHTML = "";
+            dbNews.forEach((n, index) => {
+                const badgeClass = n.status === 'FAKE' ? 'fake' : 'real';
+                container.innerHTML += `
+                    <div class="news-card">
+                        <span class="badge ${badgeClass}">${n.status}</span>
+                        <h1>${n.h1}</h1>
+                        <p>${n.p}</p>
+                        <small onclick="hapusBerita(${index})" style="color:red; cursor:pointer;">[Hapus Berita]</small>
+                    </div>
+                `;
+            });
+        }
+
+        function adminAddNews() {
+            const h1 = document.getElementById('adm-h1').value;
+            const p = document.getElementById('adm-p').value;
+            const status = document.getElementById('adm-status').value;
+            if(h1 && p) {
+                dbNews.unshift({ h1, p, status });
+                localStorage.setItem('xaca_news', JSON.stringify(dbNews));
+                renderNews();
+                alert("Berita Berhasil di Posting secara LIVE!");
+            }
+        }
+
+        function hapusBerita(index) {
+            dbNews.splice(index, 1);
+            localStorage.setItem('xaca_news', JSON.stringify(dbNews));
+            renderNews();
+        }
+
+        // CHAT LOGIC (Simulasi Real-time via LocalStorage)
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            let chats = JSON.parse(localStorage.getItem('xaca_chats')) || [];
+            if(input.value) {
+                chats.push({ user: currentUser, msg: input.value });
+                localStorage.setItem('xaca_chats', JSON.stringify(chats));
+                input.value = "";
+                renderChat();
+            }
+        }
+
+        function renderChat() {
+            const box = document.getElementById('chat-box');
+            let chats = JSON.parse(localStorage.getItem('xaca_chats')) || [];
+            box.innerHTML = chats.map(c => `<div class="msg"><b>User_XXXX</b>: ${c.msg}</div>`).join('');
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // Initial Run
+        renderNews();
+        setInterval(renderChat, 1000); // Cek chat baru tiap detik
+
+    </script>
+</body>
+</html>
